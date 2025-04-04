@@ -1,11 +1,10 @@
 from tifFileHandler import saveTifAsMat, readHSIChannelFromMat
-from matplotlib import pyplot as plt
+from xmlPassportParser import readTableLengthWave
 
-sourcePath = "./0041_0306_34728_1_04894_06_L1A.tif"
-savePath = "./hsi.mat"
+hsiPath = "./0041_0306_34728_1_04894_06_L1A.tif"
+matSavePath = "./hsi.mat"
 
-saveTifAsMat(sourcePath, savePath)
-hsiChannel = readHSIChannelFromMat(savePath, 120)
+passportFilePath = "./0041_0306_34728_1_04894_06_L1A.xml"
+table = readTableLengthWave(passportFilePath)
 
-plt.imshow(hsiChannel)
-plt.show()
+print(table)
