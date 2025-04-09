@@ -1,4 +1,4 @@
-def readTableLengthWave(passportFilePath):
+def readTableLengthWave(passportFilePath: str) -> dict:
     channelWavesLength = dict()
 
     xmlPassportFile = open(passportFilePath, "r")
@@ -34,9 +34,9 @@ def readWaveLengthBlockInDict(xmlOpenedFile, destinationDict):
             break
         
         if("<ChannelNumber>" in line):
-            channelNumber = readTagValue(line, "<ChannelNumber>")
+            channelNumber = int(readTagValue(line, "<ChannelNumber>"))
         elif("<WaveLen>" in line):
-            waveLength = readTagValue(line, "<WaveLen>")
+            waveLength = float(readTagValue(line, "<WaveLen>"))
 
         line = xmlOpenedFile.readline()
 

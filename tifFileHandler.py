@@ -30,7 +30,7 @@ def saveTifAsMat(sourcePath, savePath):
 
     savemat(savePath, {'hsi':hsi})
 
-def readHSIChannelFromMat(matFile, channel):
+def readHSIChannelFromMat(matFile: str, channel: int) -> np.ndarray:
     mat = loadmat(matFile)
     hsi = np.array(mat['hsi'])
 
