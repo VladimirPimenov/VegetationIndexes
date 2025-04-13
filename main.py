@@ -1,7 +1,7 @@
 import numpy as np
 
 from tifFileHandler import saveTifAsMat, readHSIChannelFromMat
-from xmlPassportParser import readTableLengthWave
+from xmlPassportReader import readTableLengthWave, getOrderedChannelNums
 from visualizer import showNDVI
 import indexesCalculator
 
@@ -10,9 +10,17 @@ def getChannelNumsByWavesRange(startWaveLength, endWaveLength, channelTable):
 
     for waveLength in channelTable.keys():
         if(startWaveLength <= waveLength <= endWaveLength):
-            channels.append(channelTable[waveLength])
+            channels.append(channelTable[waveLength]["ChannelNumber"])
 
     return channels
+
+def orderChannelNums(channelNums, channelsOrder):
+    ordered = list()
+    for channel in channelNums:
+        channel = int(channel)
+        ordered.append(channelsOrder[channel])
+
+    return ordered
 
 def fillChannelsFromMat(matPath, channels, channelNums):
     currentChannel = 0
@@ -28,23 +36,27 @@ def main():
     matSavePath = "./hsi.mat"
     passportFilePath = "./0041_0306_34728_1_04894_06_L1A.xml"
 
+
     # channel72 = readHSIChannelFromMat(matSavePath, 72)
     # redChannels = np.array([channel72])
     # print("channel72 readed")
-
     # channel85 = readHSIChannelFromMat(matSavePath, 85)
     # nirChannels = np.array([channel85])
     # print("channe82 readed")
 
-    channelTable = readTableLengthWave(passportFilePath)
+    waveLengthTable = readTableLengthWave(passportFilePath)
+    channelsOrder = getOrderedChannelNums(passportFilePath)
 
-    redChannelNums = getChannelNumsByWavesRange(630, 750, channelTable)
-    nirChannelNums = getChannelNumsByWavesRange(750, 850, channelTable)
-    redChannels = np.zeros((len(redChannelNums), 2388, 999))
-    nirChannels = np.zeros((len(nirChannelNums), 2388, 999))
+    redChannelNums = getChannelNumsByWavesRange(630, 750, waveLengthTable)
+    nirChannelNums = getChannelNumsByWavesRange(750, 1400, waveLengthTable)
+    redChannelNums = orderChannelNums(redChannelNums, channelsOrder)
+    nirChannelNums = orderChannelNums(nirChannelNums, channelsOrder)
 
     print(redChannelNums)
     print(nirChannelNums)
+
+    redChannels = np.zeros((len(redChannelNums), 2388, 999))
+    nirChannels = np.zeros((len(nirChannelNums), 2388, 999))
 
     fillChannelsFromMat(matSavePath, redChannels, redChannelNums)
     fillChannelsFromMat(matSavePath, nirChannels, nirChannelNums)
