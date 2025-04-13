@@ -1,10 +1,9 @@
 def readTableLengthWave(passportFilePath: str) -> dict:
-    channelWavesLength = dict()
+    table = dict()
+    tableOpenTag = "<TableLengthWave>"
+    tableCloseTag = tableOpenTag.replace("<", "</")
 
     xmlPassportFile = open(passportFilePath, "r")
-
-    tableOpenTag = "<TableLengthWave>"
-    tableCloseTag = "</TableLengthWave>"
     isTableReading = False
 
     line = xmlPassportFile.readline()
@@ -17,28 +16,55 @@ def readTableLengthWave(passportFilePath: str) -> dict:
             break
 
         if(isTableReading):
-            readWaveLengthBlockInDict(xmlPassportFile, channelWavesLength)
+            readWaveLengthBlockToDict(xmlPassportFile, table)
 
         line = xmlPassportFile.readline()
     xmlPassportFile.close()
 
-    return channelWavesLength
+    return table
 
-def readWaveLengthBlockInDict(xmlOpenedFile, destinationDict):
-    blockCloseTag = "</WaveLength>"
+def readWaveLengthBlockToDict(xmlOpenedFile, destinationDict):
+    blockOpenTag = "<WaveLength>"
+    blockCloseTag = blockOpenTag.replace("<", "</")
+
+    blockKey = "<WaveLen>"
+
+    block = dict()
 
     line = xmlOpenedFile.readline()
     while(line):
-        if(blockCloseTag in line):
-            destinationDict[waveLength] = channelNumber
+        if(blockOpenTag in line):
+            continue
+        elif(blockCloseTag in line):
             break
         
-        if("<ChannelNumber>" in line):
-            channelNumber = int(readTagValue(line, "<ChannelNumber>"))
-        elif("<WaveLen>" in line):
-            waveLength = float(readTagValue(line, "<WaveLen>"))
+        lineTag = readTag(line)
+
+        if(lineTag == blockKey):
+            waveLen = readTagValue(line, lineTag)
+        else:
+            tagValue = readTagValue(line, lineTag)
+            block[lineTag] = tagValue
 
         line = xmlOpenedFile.readline()
+
+    destinationDict[waveLen] = block
+
+def readTag(line):
+    tag = ""
+    isTagReading = False
+
+    for symb in line:
+        if(symb == '<'):
+            isTagReading = True
+        elif(symb == '>'):
+            tag += symb
+            break
+
+        if(isTagReading):
+            tag += symb
+
+    return tag
 
 def readTagValue(lineWithTag, tag):
     closeTag = tag.replace("<", "</")
