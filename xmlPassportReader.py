@@ -41,9 +41,11 @@ def readWaveLengthBlockToDict(xmlOpenedFile, destinationDict):
         lineTag = readTag(line)
 
         if(lineTag == blockKey):
-            waveLen = readTagValue(line, lineTag)
+            waveLen = float(readTagValue(line, lineTag))
         else:
             tagValue = readTagValue(line, lineTag)
+
+            lineTag = removeTagBraces(lineTag)
             block[lineTag] = tagValue
 
         line = xmlOpenedFile.readline()
@@ -73,3 +75,42 @@ def readTagValue(lineWithTag, tag):
     tagValue = tagValue.replace(closeTag, "")
 
     return tagValue.strip()
+
+def removeTagBraces(tag):
+    return tag[1:-1]
+
+def getOrderedChannelNums(passportFilePath: str) -> dict:
+    orderedChannels = dict()
+
+    tableOpenTag = "<TableLengthWave>"
+    tableCloseTag = tableOpenTag.replace("<", "</")
+    channelNumTag = "<ChannelNumber>"
+
+    xmlPassportFile = open(passportFilePath, "r")
+    isTableReading = False
+    orderedChannel = 0
+
+    line = xmlPassportFile.readline()
+    while(line):
+        if(tableOpenTag in line):
+            isTableReading = True
+            line = xmlPassportFile.readline()
+            continue
+        elif(tableCloseTag in line):
+            break
+
+        if(isTableReading and isChannelNumberLine(line)):
+            channel = int(readTagValue(line, channelNumTag))
+
+            orderedChannels[channel] = orderedChannel
+            orderedChannel += 1
+
+        line = xmlPassportFile.readline()
+    xmlPassportFile.close()
+
+    return orderedChannels
+
+def isChannelNumberLine(line):
+    if("<ChannelNumber" in line):
+        return True
+    return False

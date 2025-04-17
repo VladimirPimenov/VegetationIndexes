@@ -19,8 +19,8 @@ def print_raster_info(p_raster):
 def get_band(p_raster, p_band_num):
     return p_raster.GetRasterBand(p_band_num).ReadAsArray()
 
-def saveTifAsMat(sourcePath, savePath):
-    raster = open_raster(sourcePath)
+def saveTifAsMat(tifFilePath, matFilePath):
+    raster = open_raster(tifFilePath)
     rows, cols, n_bands = get_shape(raster)
     hsi = np.zeros((rows, cols, n_bands))
 
@@ -28,10 +28,10 @@ def saveTifAsMat(sourcePath, savePath):
         hsi[:,:,n-1] = get_band(raster, n)
         print(f'{n}/{n_bands}')
 
-    savemat(savePath, {'hsi':hsi})
+    savemat(matFilePath, {'hsi':hsi})
 
-def readHSIChannelFromMat(matFile: str, channel: int) -> np.ndarray:
-    mat = loadmat(matFile)
+def readHSIChannelFromMat(matFilePath: str, channel: int) -> np.ndarray:
+    mat = loadmat(matFilePath)
     hsi = np.array(mat['hsi'])
 
     width = hsi.shape[1]
