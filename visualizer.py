@@ -7,7 +7,7 @@ def showNDVI(NDVIimage: np.ndarray) -> None:
     plt.imshow(RGBimage)
     plt.show()
 
-def convertNDVItoRGB(NDVIimage: np.ndarray) -> np.ndarray:
+def convertNDVItoRGB(NDVIimage):
     RGBimage = np.zeros((NDVIimage.shape[0], NDVIimage.shape[1], 3), dtype = np.int32)
 
     height = NDVIimage.shape[0]
@@ -19,8 +19,8 @@ def convertNDVItoRGB(NDVIimage: np.ndarray) -> np.ndarray:
     return RGBimage
 
 def getRGBcolorFromNDVI(ndvi):
-    if(ndvi < -0.9):
-        rgb = [0, 0, 0]
+    if(-1 <= ndvi < -0.9):
+        rgb = [0, 0, 14]
     elif(-0.9 <= ndvi < -0.8):
         rgb = [0, 0, 43]
     elif(-0.8 <= ndvi < -0.7):
@@ -36,9 +36,9 @@ def getRGBcolorFromNDVI(ndvi):
     elif(-0.3 <= ndvi < -0.2):
         rgb = [0, 0, 199]
     elif(-0.2 <= ndvi < -0.1):
-        rgb = [147, 112, 216]
+        rgb = [0, 0, 255]
     elif(-0.1 <= ndvi < 0.0):
-        rgb = [255, 255, 255]
+        rgb = [221, 221, 231]
     elif(0.0 <= ndvi < 0.1):
          rgb = [175, 143, 101]
     elif(0.1 <= ndvi < 0.2):
@@ -59,6 +59,4 @@ def getRGBcolorFromNDVI(ndvi):
         rgb = [0, 121, 0]
     elif(0.9 <= ndvi < 1.0):
         rgb = [0, 88, 0]
-    else:
-        rgb = [255, 255, 255]
     return rgb
