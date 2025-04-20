@@ -1,3 +1,5 @@
+from .utils import calculateAvgPixelValue
+
 import numpy as np
 
 def calculateNDVIforChannels(redChannels: np.ndarray, nirChannels: np.ndarray) -> np.ndarray:
@@ -18,11 +20,3 @@ def calculateNDVIforChannels(redChannels: np.ndarray, nirChannels: np.ndarray) -
 def calculateNDVI(red, nir):
     ndvi = (nir - red) / (nir + red)
     return ndvi
-
-def calculateAvgPixelValue(pixelX, pixelY, channels):
-    sumPixelValue = 0
-
-    for channel in channels:
-        sumPixelValue += channel[pixelY][pixelX]
-
-    return sumPixelValue / len(channels)
