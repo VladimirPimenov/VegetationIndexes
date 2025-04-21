@@ -25,6 +25,6 @@ def calculateARVIforChannels(redChannels: np.ndarray,
     return ARVIimage
 
 def calculateARVI(red, nir, blue, alpha):
-    rb = red - alpha*(red - blue)
+    rb = red - alpha * (red - blue)
     arvi = (nir - rb) / (nir + rb)
     return arvi

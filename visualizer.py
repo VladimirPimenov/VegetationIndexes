@@ -57,6 +57,6 @@ def getRGBcolorFromNDVI(ndvi):
          rgb = [0, 148, 0]
     elif(0.8 <= ndvi < 0.9):
         rgb = [0, 121, 0]
-    elif(0.9 <= ndvi < 1.0):
+    elif(0.9 <= ndvi <= 1.0):
         rgb = [0, 88, 0]
     return rgb
