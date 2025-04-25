@@ -1,14 +1,7 @@
-from matplotlib import pyplot as plt
 import numpy as np
 
-def showNDVI(NDVIimage: np.ndarray) -> None:
-    RGBimage = convertNDVItoRGB(NDVIimage)
-
-    plt.imshow(RGBimage)
-    plt.show()
-
 def convertNDVItoRGB(NDVIimage):
-    RGBimage = np.zeros((NDVIimage.shape[0], NDVIimage.shape[1], 3), dtype = np.int32)
+    RGBimage = np.zeros((NDVIimage.shape[0], NDVIimage.shape[1], 3), dtype = np.uint8)
 
     height = NDVIimage.shape[0]
     width = NDVIimage.shape[1]
