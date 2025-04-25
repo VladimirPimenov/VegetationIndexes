@@ -2,7 +2,7 @@ from config import channelsMatFilePath
 
 from tifFileHandler import saveTifAsMat, readHSIChannelFromMat
 from channelUtils import orderChannelNums, getChannelNumsByWavesRange
-from visualizer import showNDVI, convertNDVItoRGB
+from rgbConverter import convertNDVItoRGB
 import indexesCalculating
 
 import numpy as np
@@ -14,14 +14,12 @@ def simpleNDVIcalculating(redChannelNum, nirChannelNum):
 
     redChannel = readHSIChannelFromMat(channelsMatFilePath, redChannelNum)
     redChannel = np.array([redChannel])
-    print(f"Channel {redChannelNum} readed")
 
     nirChannel = readHSIChannelFromMat(channelsMatFilePath, nirChannelNum)
     nirChannel = np.array([nirChannel])
-    print(f"Channel {nirChannelNum} readed")
 
     ndvi = indexesCalculating.calculateNDVIforChannels(redChannel, nirChannel)
-    showNDVI(ndvi)
+    return ndvi    
 def rangeNDVIcalculating(redWavesRange, nirWavesRange):
     redChannelNums = getChannelNumsByWavesRange(redWavesRange[0], redWavesRange[1])
     redChannelNums = orderChannelNums(redChannelNums)
@@ -38,7 +36,7 @@ def rangeNDVIcalculating(redWavesRange, nirWavesRange):
     fillChannelsFromMat(nirChannels, nirChannelNums)
 
     ndvi = indexesCalculating.calculateNDVIforChannels(redChannels, nirChannels)
-    showNDVI(ndvi)
+    return ndvi
 
 def simpleARVIcalculating(redChannelNum, nirChannelNum, blueChannelNum):
     redChannelNum = orderChannelNums([redChannelNum])[0]
@@ -47,21 +45,15 @@ def simpleARVIcalculating(redChannelNum, nirChannelNum, blueChannelNum):
 
     redChannel = readHSIChannelFromMat(channelsMatFilePath, redChannelNum)
     redChannel = np.array([redChannel])
-    print(f"Channel {redChannelNum} readed")
 
     blueChannel = readHSIChannelFromMat(channelsMatFilePath, blueChannelNum)
     blueChannel = np.array([blueChannel])
-    print(f"Channel {blueChannelNum} readed")
 
     nirChannel = readHSIChannelFromMat(channelsMatFilePath, nirChannelNum)
     nirChannel = np.array([nirChannel])
-    print(f"Channel {nirChannelNum} readed")
 
     arvi = indexesCalculating.calculateARVIforChannels(redChannel, nirChannel, blueChannel, 0.5)
-    
-    arvi = convertNDVItoRGB(arvi)
-    plt.imshow(arvi)
-    plt.show()
+    return arvi
 def rangeARVIcalculating(redWavesRange, nirWavesRange, blueWavesRange):
     redChannelNums = getChannelNumsByWavesRange(redWavesRange[0], redWavesRange[1])
     redChannelNums = orderChannelNums(redChannelNums)
@@ -84,10 +76,7 @@ def rangeARVIcalculating(redWavesRange, nirWavesRange, blueWavesRange):
     fillChannelsFromMat(blueChannels, blueChannelNums)
 
     arvi = indexesCalculating.calculateARVIforChannels(redChannels, nirChannels, blueChannels, 0.5)
-    arvi = convertNDVItoRGB(arvi)
-
-    plt.imshow(arvi)
-    plt.show()
+    return arvi
 
 def simpleSAVIcalculating(redChannelNum, nirChannelNum):
     redChannelNum = orderChannelNums([redChannelNum])[0]
@@ -95,16 +84,12 @@ def simpleSAVIcalculating(redChannelNum, nirChannelNum):
 
     redChannel = readHSIChannelFromMat(channelsMatFilePath, redChannelNum)
     redChannel = np.array([redChannel])
-    print(f"Channel {redChannelNum} readed")
 
     nirChannel = readHSIChannelFromMat(channelsMatFilePath, nirChannelNum)
     nirChannel = np.array([nirChannel])
-    print(f"Channel {nirChannelNum} readed")
 
     savi = indexesCalculating.calculateSAVIforChannels(redChannel, nirChannel, 0.5)
-
-    plt.imshow(savi)
-    plt.show()
+    return savi
 def rangeSAVIcalculating(redWavesRange, nirWavesRange):
     redChannelNums = getChannelNumsByWavesRange(redWavesRange[0], redWavesRange[1])
     redChannelNums = orderChannelNums(redChannelNums)
@@ -121,9 +106,7 @@ def rangeSAVIcalculating(redWavesRange, nirWavesRange):
     fillChannelsFromMat(nirChannels, nirChannelNums)
 
     savi = indexesCalculating.calculateSAVIforChannels(redChannels, nirChannels, 0.5)
-
-    plt.imshow(savi)
-    plt.show()
+    return savi
 
 def fillChannelsFromMat(channels, channelNums):
     currentChannel = 0
@@ -132,17 +115,18 @@ def fillChannelsFromMat(channels, channelNums):
             channels[currentChannel] = readHSIChannelFromMat(channelsMatFilePath, channelNum)
             currentChannel += 1
 
-            print(f"Channel {channelNum} readed")
-
 def main():
-    #simpleNDVIcalculating(72, 85)
+    ndvi = simpleNDVIcalculating(72, 85)
+    ndvi = convertNDVItoRGB(ndvi)
+
     #rangeNDVIcalculating([630, 635], [750, 755])
 
     #simpleARVIcalculating(75, 85, 14)
     #rangeARVIcalculating([630, 750], [750, 1400], [440, 485])
 
-    simpleSAVIcalculating(72, 85)
-    rangeSAVIcalculating([630, 750], [750, 1400])
+    #simpleNDVIcalculating(72, 85)
+    #rangeSAVIcalculating([630, 750], [750, 1400])
+
 
 if __name__ == "__main__":
     main()

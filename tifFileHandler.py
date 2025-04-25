@@ -43,4 +43,6 @@ def readHSIChannelFromMat(matFilePath: str, channel: int) -> np.ndarray:
         for col in range(0, width):
             hsiChannel[row][col] = hsi[row][col][channel]
 
+    print(f"Channel {channel} readed")
+
     return hsiChannel
