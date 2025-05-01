@@ -9,7 +9,8 @@ def getChannelNumsByWavesRange(startWaveLength, endWaveLength):
 
     for waveLength in waveLengthTable.keys():
         if(startWaveLength <= waveLength <= endWaveLength):
-            channels.append(waveLengthTable[waveLength]["ChannelNumber"])
+            channel = waveLengthTable[waveLength]["ChannelNumber"]
+            channels.append(channel)
 
     return channels
 
@@ -24,3 +25,13 @@ def orderChannelNums(channelNums):
         ordered.append(channelsOrder[channel])
 
     return ordered
+
+def removeAthmosphereInfluencedChannels(channels):
+    athmosphereInfluencedChannels = [77, 78, 79, 80, 81, 82, 88, 89, 90, 91, 92, 109, 110, 111, 112, 113, 114, 115, 116]
+    correctedChannels = list()
+
+    for channel in channels:
+        if channel not in athmosphereInfluencedChannels:
+            correctedChannels.append(channel)
+
+    return correctedChannels

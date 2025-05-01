@@ -1,12 +1,14 @@
 from config import channelsMatFilePath
 
 from tifFileHandler import saveTifAsMat, readHSIChannelFromMat
-from channelUtils import orderChannelNums, getChannelNumsByWavesRange
+from channelUtils import orderChannelNums, getChannelNumsByWavesRange, removeAthmosphereInfluencedChannels
 from rgbConverter import convertNDVItoRGB
+from maskCreator import createMaskFromNDVI
 import indexesCalculating
 
 import numpy as np
 from matplotlib import pyplot as plt
+from PIL import Image
 
 def simpleNDVIcalculating(redChannelNum, nirChannelNum):
     redChannelNum = orderChannelNums([redChannelNum])[0]
@@ -23,9 +25,11 @@ def simpleNDVIcalculating(redChannelNum, nirChannelNum):
 def rangeNDVIcalculating(redWavesRange, nirWavesRange):
     redChannelNums = getChannelNumsByWavesRange(redWavesRange[0], redWavesRange[1])
     redChannelNums = orderChannelNums(redChannelNums)
+    redChannelNums = removeAthmosphereInfluencedChannels(redChannelNums)
 
     nirChannelNums = getChannelNumsByWavesRange(nirWavesRange[0], nirWavesRange[1])
     nirChannelNums = orderChannelNums(nirChannelNums)
+    nirChannelNums = removeAthmosphereInfluencedChannels(nirChannelNums)
 
     print(f"Red channels: {redChannelNums}")
     print(f"Nir channels: {nirChannelNums}")
@@ -116,16 +120,23 @@ def fillChannelsFromMat(channels, channelNums):
             currentChannel += 1
 
 def main():
-    ndvi = simpleNDVIcalculating(72, 85)
-    ndvi = convertNDVItoRGB(ndvi)
+    #ndvi = simpleNDVIcalculating(72, 85)
+    #ndvi = rangeNDVIcalculating([630, 750], [750, 1400])
 
-    #rangeNDVIcalculating([630, 635], [750, 755])
+    #mask = createMaskFromNDVI(ndvi)
+    #ndvi = convertNDVItoRGB(ndvi)
 
-    #simpleARVIcalculating(75, 85, 14)
-    #rangeARVIcalculating([630, 750], [750, 1400], [440, 485])
+    # img = Image.fromarray(mask)
+    # img.save("mask.png")
 
-    #simpleNDVIcalculating(72, 85)
-    #rangeSAVIcalculating([630, 750], [750, 1400])
+    #arvi = simpleARVIcalculating(75, 85, 14)
+    arvi = rangeARVIcalculating([630, 750], [750, 1400], [440, 485])
+
+    plt.imshow(arvi)
+    plt.show()
+
+    #savi = simpleSAVIcalculating(72, 85)
+    #savi = rangeSAVIcalculating([630, 750], [750, 1400])
 
 
 if __name__ == "__main__":
