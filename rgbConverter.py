@@ -1,14 +1,14 @@
 import numpy as np
 
-def convertNDVItoRGB(NDVIimage):
-    RGBimage = np.zeros((NDVIimage.shape[0], NDVIimage.shape[1], 3), dtype = np.uint8)
+def convertNDVItoRGB(ndvi):
+    height = ndvi.shape[0]
+    width = ndvi.shape[1]
 
-    height = NDVIimage.shape[0]
-    width = NDVIimage.shape[1]
+    RGBimage = np.zeros((height, width, 3), dtype = np.uint8)
 
     for y in range(height):
         for x in range(width):
-            RGBimage[y][x] = getRGBcolorFromNDVI(NDVIimage[y][x])
+            RGBimage[y][x] = getRGBcolorFromNDVI(ndvi[y][x])
     return RGBimage
 
 def getRGBcolorFromNDVI(ndvi):

@@ -9,7 +9,7 @@ def createMaskFromNDVI(ndvi: np.ndarray) -> np.ndarray:
     for y in range(height):
         for x in range(width):
             if(0.2 <= ndvi[y][x] < 0.4):
-                mask[y][x] = [255, 0, 0, 200]
+                mask[y][x] = [255, 0, 0, 127]
             else:
                 mask[y][x] = [0, 0, 0, 0]
     return mask
